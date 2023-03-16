@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller; // Classe da non dimenticare
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Project;
 use App\Models\Category;
 use App\Models\Technology;
-use Carbon\Carbon;
-use DateTime;
+use App\Models\Lead;
+use App\Mail\NewContact;
+
 
 
 class ProjectController extends Controller
@@ -28,7 +30,7 @@ class ProjectController extends Controller
         //* Utilizzo del metodo paginate e del metodo with per caricare i dati correlati
         //* e ottenere un numero limitato dei record alla volta
         //! $projects = Project::with('category')->paginate(10);
-        $project = Project::findOrFail();
+
         $projects = Project::all();
         return view('admin.projects.index', compact('projects'));
     }
@@ -59,21 +61,12 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         $form_data = $request->validated();
-
         $slug = Project::generateSlug($request->title);
 
         $excerpt = '';
         if ($request->content != '') {
             $excerpt = substr($request->content, 0, 147) . '...';
         }
-
-        //* Converti la data nel formato desiderato
-        if (!empty($form_data['published'])) {
-            $published_at = Carbon::parse($form_data['published']);
-            $form_data['published_at'] = $published_at->toDateTimeString();
-            unset($form_data['published']);
-        }
-
 
         //*Aggiungo Coppia Chiave Valore All'array $form_data
         $form_data['slug'] = $slug;
@@ -87,16 +80,24 @@ class ProjectController extends Controller
             $form_data['cover_image'] = $path;
         }
 
-        $newProject->fill($form_data);
 
+        $newProject->fill($form_data);
+        $newProject->save();
+        //* Controllo se l'array associativO Request ha l'indice Technologies
+        if($request->has('technologies')){
+            $newProject->technologies()->attach($request->technologies);
+        }
+
+
+        $new_lead = new Lead();
+        $new_lead->title = $form_data['title'];
+        $new_lead->description = $form_data['description'];
+        $new_lead->slug = $form_data['slug'];
+        /* $new_lead->author = $form_data['author']; */
 
         $newProject->save();
 
-        //* Controllo se l'array associativO Request ha l'indice Technologies
-        if ($request->has('technologies')) {
-            $newProject->technologies->attach($request->technologies);
-        }
-
+        Mail::to('info@boolpress.com')->send(new NewContact($new_lead));
 
         return redirect()->route('admin.projects.index')->with('message', 'Progetto Creato con successo.');
     }
@@ -153,12 +154,12 @@ class ProjectController extends Controller
         }
 
         //* Converti la data nel formato desiderato
-        if (!empty($form_data['published'])) {
+        /* if (!empty($form_data['published'])) {
             $published_at = Carbon::parse($form_data['published']);
             $form_data['published_at'] = $published_at->toDateTimeString();
             unset($form_data['published']);
         }
-
+ */
         //*Aggiungo Coppia Chiave Valore All'array $form_data
         $form_data['slug'] = $slug;
         $form_data['excerpt'] = $excerpt;
@@ -185,7 +186,7 @@ class ProjectController extends Controller
         } */
 
         //* FORMA (FUNZIONE) OTTIMIZZATA GRAZIE AL SYNC
-        $project->technologies()->sync($request->technologies);
+        /* $project->technologies()->sync($request->technologies); */
 
 
 
