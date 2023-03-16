@@ -127,7 +127,7 @@
                                 Descrizione
                             </label>
                             <textarea type="text" class="form-control" placeholder="Inserisci Descrizione del Progetto" id="description"
-                                name="description" value="{{ old('description') ?? $categories->description }}"></textarea>
+                                name="description" value="{{ old('description') ?? $category->description }}"></textarea>
                         </div>
 
                         {{-- * PUBBLICATO --}}

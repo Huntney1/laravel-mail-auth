@@ -28,7 +28,7 @@ class ProjectController extends Controller
         //* Utilizzo del metodo paginate e del metodo with per caricare i dati correlati
         //* e ottenere un numero limitato dei record alla volta
         //! $projects = Project::with('category')->paginate(10);
-
+        $project = Project::findOrFail();
         $projects = Project::all();
         return view('admin.projects.index', compact('projects'));
     }
