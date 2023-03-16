@@ -37,94 +37,111 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    {{-- * AUTORE --}}
-                    <div class="form-group my-3">
-                        <label class="control-label">
-                            Autore
-                        </label>
-                        <input type="text" class="form-control" placeholder="Inserisci Autore" id="author"
-                            name="author" value="{{ old('author') ?? $project->author }}">
-                        @error('author')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
 
-                    {{-- * CATEGORIE --}}
+                    {{-- * COPERTINA --}}
                     <div class="form-group my-3">
-                        <label class="control-label">
-                            Categorie
-                        </label>
-                        <select class="form-control" name="category_id" id="category_id">
-                            <option value="">Seleziona Categoria...</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}"
-                                    {{ $category->id == old('$category_id', $project->category_id) ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('category_id')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- * TECNOLOGIA --}}
-                    <div class="form-group my-3">
-                        <div class="control-label">
-                            Tecnologia
+                        <label class="control-label">Copertina</label>
+                        <div class="mb-3">
+                            <img src="{{ asset('storage/'.$project->cover_image) }}"
+                                class="w-50">
                         </div>
-                        @foreach ($technologies as $technology)
-                            <div class="form-check @error('technologies') is-invalid @enderror">
+                        <input type="file" name="cover_image" id="cover_image"
+                            class="form-control
+                        @error('cover_image')is-invalid @enderror">
 
-                                @if ($errors->any())
-                                    {{-- ? PRIMO CASO --}}
-                                    {{-- * Ci Sono Degli Errori di Validazione Quindi Bisogna Ricaricare i Progetti selezionati tramite la funzione old() --}}
-
-                                    {{-- ? Controlliamo --}}
-                                    {{-- se è presente il valore di Technology->id nel Array technologies allora mettiamo il checked. --}}
-                                    <input class="form-chechk-input" type="checkbox" value="{{ $technology->id }}"
-                                        name="technologies[]" {{-- * name="technologies[]" = crea un array con gli Id delle tecnologie --}}
-                                        {{ in_array($technology->id, old('technologies', [])) ? 'checkd' : '' }}>
-                                    <label for="" class="form-check-label">{{ $technology->name }}</label>
-                                @else
-                                    {{-- ? SECONDO CASO --}}
-                                    {{-- * Se Non Sono Presenti Errori di Validazione Significa Che la Pagina è Stata Aperta Per la Prima Volta,Quindi Dobbiamo Recuperare le Tecnologie in Relazione hai Progetti --}}
-
-                                    {{-- ? Controlliamo --}}
-                                    {{-- recupero nel project le technologies che contengono il singolo technology, Se è vero metto check altrimenti stringa vuota --}}
-                                    <input class="form-check-input" type="checkbox" value="{{ $technology->id }}"
-                                        name="technology[]"{{ $project->technologies->contains($technology) ? 'checked' : '' }}>
-                                        <label for="" class="form-check-label">{{ $technology->name }}</label>
-                                @endif
-
-                            </div>
-                        @endforeach
-                        @error('technologies')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                        @error('cover_image')
+                            <div class="text-danger"> {{ $message }} </div>
                         @enderror
-                    </div>
 
-                    {{-- * DESCRIZIONE --}}
-                    <div class="form-group my-3">
-                        <label class="control-label">
-                            Descrizione
-                        </label>
-                        <textarea type="text" class="form-control" placeholder="Inserisci Descrizione del Progetto" id="description"
-                            name="description" value="{{ old('description') ?? $categories->description }}"></textarea>
-                    </div>
 
-                    {{-- * PUBBLICATO --}}
-                    <div class="form-group my-3">
-                        <label class="control-label">
-                            Pubblicato
-                        </label>
-                        <input type="date" class="form-control" placeholder="Inserisci l'Immagine" id="published"
-                            name="published" value="{{ old('published') ?? $project->published }}">
-                    </div>
+                        {{-- * AUTORE --}}
+                        <div class="form-group my-3">
+                            <label class="control-label">
+                                Autore
+                            </label>
+                            <input type="text" class="form-control" placeholder="Inserisci Autore" id="author"
+                                name="author" value="{{ old('author') ?? $project->author }}">
+                            @error('author')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-                    <div class="form-group my-3">
-                        <button type="submit" class="btn btn-success">SALVA</button>
-                    </div>
+                        {{-- * CATEGORIE --}}
+                        <div class="form-group my-3">
+                            <label class="control-label">
+                                Categorie
+                            </label>
+                            <select class="form-control" name="category_id" id="category_id">
+                                <option value="">Seleziona Categoria...</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ $category->id == old('$category_id', $project->category_id) ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- * TECNOLOGIA --}}
+                        <div class="form-group my-3">
+                            <div class="control-label">
+                                Tecnologia
+                            </div>
+                            @foreach ($technologies as $technology)
+                                <div class="form-check @error('technologies') is-invalid @enderror">
+
+                                    @if ($errors->any())
+                                        {{-- ? PRIMO CASO --}}
+                                        {{-- * Ci Sono Degli Errori di Validazione Quindi Bisogna Ricaricare i Progetti selezionati tramite la funzione old() --}}
+
+                                        {{-- ? Controlliamo --}}
+                                        {{-- se è presente il valore di Technology->id nel Array technologies allora mettiamo il checked. --}}
+                                        <input class="form-chechk-input" type="checkbox" value="{{ $technology->id }}"
+                                            name="technologies[]" {{-- * name="technologies[]" = crea un array con gli Id delle tecnologie --}}
+                                            {{ in_array($technology->id, old('technologies', [])) ? 'checkd' : '' }}>
+                                        <label for="" class="form-check-label">{{ $technology->name }}</label>
+                                    @else
+                                        {{-- ? SECONDO CASO --}}
+                                        {{-- * Se Non Sono Presenti Errori di Validazione Significa Che la Pagina è Stata Aperta Per la Prima Volta,Quindi Dobbiamo Recuperare le Tecnologie in Relazione hai Progetti --}}
+
+                                        {{-- ? Controlliamo --}}
+                                        {{-- recupero nel project le technologies che contengono il singolo technology, Se è vero metto check altrimenti stringa vuota --}}
+                                        <input class="form-check-input" type="checkbox" value="{{ $technology->id }}"
+                                            name="technology[]"{{ $project->technologies->contains($technology) ? 'checked' : '' }}>
+                                        <label for="" class="form-check-label">{{ $technology->name }}</label>
+                                    @endif
+
+                                </div>
+                            @endforeach
+                            @error('technologies')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- * DESCRIZIONE --}}
+                        <div class="form-group my-3">
+                            <label class="control-label">
+                                Descrizione
+                            </label>
+                            <textarea type="text" class="form-control" placeholder="Inserisci Descrizione del Progetto" id="description"
+                                name="description" value="{{ old('description') ?? $categories->description }}"></textarea>
+                        </div>
+
+                        {{-- * PUBBLICATO --}}
+                        <div class="form-group my-3">
+                            <label class="control-label">
+                                Pubblicato
+                            </label>
+                            <input type="date" class="form-control" placeholder="Inserisci l'Immagine" id="published"
+                                name="published" value="{{ old('published') ?? $project->published }}">
+                        </div>
+
+                        <div class="form-group my-3">
+                            <button type="submit" class="btn btn-success">SALVA</button>
+                        </div>
                 </form>
             </div>
         </div>

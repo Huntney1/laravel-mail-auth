@@ -94,7 +94,7 @@ class ProjectController extends Controller
 
         //* Controllo se l'array associativO Request ha l'indice Technologies
         if ($request->has('technologies')) {
-            $newProject->technologies()->attach($request->technologies);
+            $newProject->technologies->attach($request->technologies);
         }
 
 
