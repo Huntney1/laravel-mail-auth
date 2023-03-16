@@ -18,7 +18,8 @@
 
                 <strong>Titolo</strong>
                 <p>{{ $project->title }}</p>
-                <img src="{{ asset('storage/' . $project->cover_images)}}" alt="{{ $project->title}}" class="w-50">
+                <img src="{{asset('storage/' .$project->cover_image)}}" alt="{{$project->title}}" class="w-50">
+
                 <p><strong>Slug:</strong>{{ $project->slug }}</p>
 
                 <p><strong>Autore:</strong>{{ $project->author }}</p>
